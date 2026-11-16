@@ -15,6 +15,12 @@ import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
+// crypto.randomUUID só existe em HTTPS/localhost; este fallback funciona em HTTP também
+const gerarId = () =>
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
 export default function CriarOrcamento() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -75,7 +81,7 @@ export default function CriarOrcamento() {
                             const gramId = item.idGramatura ?? item.gramaturaId ?? item.gramatura_id ?? item.gramatura?.id;
 
                             return {
-                                keyId: crypto.randomUUID(),
+                                keyId: gerarId(),
                                 comprimento: item.comprimento || "",
                                 largura: item.largura || "",
                                 altura: item.altura || "",
@@ -118,7 +124,7 @@ export default function CriarOrcamento() {
             itens: [
                 ...prev.itens,
                 {
-                    keyId: crypto.randomUUID(),
+                    keyId: gerarId(),
                     comprimento: "",
                     largura: "",
                     altura: "",
