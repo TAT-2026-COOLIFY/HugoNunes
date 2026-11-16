@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Disparar deploy do backend no Coolify
         run: |
-          curl --fail-with-body -sS \
+          curl --fail-with-body -sS -X POST \
             -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" \
             "$COOLIFY_URL/api/v1/deploy?uuid=$BACK_UUID&force=false"
 
@@ -45,6 +45,6 @@ jobs:
     steps:
       - name: Disparar deploy do frontend no Coolify
         run: |
-          curl --fail-with-body -sS \
+          curl --fail-with-body -sS -X POST \
             -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" \
             "$COOLIFY_URL/api/v1/deploy?uuid=$FRONT_UUID&force=false"
