@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 
 import api from "../../services/api";
-import { listarPedidosFábrica } from "../../api/PedidosApi";
+import { listarPedidosFábrica } from "../../api/pedidosApi";
 
 // Ícones
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
