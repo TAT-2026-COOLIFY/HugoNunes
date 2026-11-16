@@ -1,0 +1,50 @@
+name: Deploy no Coolify
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  COOLIFY_URL: https://computacao.fema.edu.br
+  BACK_UUID: tjfykdjvvimtwbdmteyjqfdn
+  FRONT_UUID: ptzsipduoojuur8xwmhfwox6
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      back: ${{ steps.filter.outputs.back }}
+      front: ${{ steps.filter.outputs.front }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            back:
+              - 'SystemVDL-main/**'
+            front:
+              - 'SystemVDL_Front-main/**'
+
+  deploy-back:
+    needs: changes
+    if: needs.changes.outputs.back == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar deploy do backend no Coolify
+        run: |
+          curl --fail-with-body -sS \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" \
+            "$COOLIFY_URL/api/v1/deploy?uuid=$BACK_UUID&force=false"
+
+  deploy-front:
+    needs: changes
+    if: needs.changes.outputs.front == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar deploy do frontend no Coolify
+        run: |
+          curl --fail-with-body -sS \
+            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}" \
+            "$COOLIFY_URL/api/v1/deploy?uuid=$FRONT_UUID&force=false"
